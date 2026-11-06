@@ -100,6 +100,8 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InOrder;
@@ -933,6 +935,9 @@ public abstract class AbstractServletWebServerFactoryTests {
 	}
 
 	@Test
+	// The ubuntu-latest GitHub runner kernel lets a socket bind to 255.255.255.255, so no exception
+	// is raised there; the test still runs on the Windows leg.
+	@DisabledOnOs(OS.LINUX)
 	void malformedAddress() throws Exception {
 		AbstractServletWebServerFactory factory = getFactory();
 		factory.setAddress(InetAddress.getByName("255.255.255.255"));
